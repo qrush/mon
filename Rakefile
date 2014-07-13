@@ -9,3 +9,7 @@ task :pokedb do
     end
   end
 end
+
+task :console do
+  exec "irb -Ilib -r./lib/mon"
+end

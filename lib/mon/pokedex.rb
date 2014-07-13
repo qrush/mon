@@ -35,7 +35,7 @@ module Mon
 
     def self.db
       require 'sequel'
-      @db ||= Sequel.sqlite(File.join(File.dirname(__FILE__), "../../../share/pokedb.sqlite3"))
+      @db ||= Sequel.sqlite(File.join(File.dirname(__FILE__), "../../share/pokedb.sqlite3"))
     end
   end
 end
