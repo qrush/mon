@@ -49,6 +49,8 @@ module Mon
     def attack(name, enemy)
       if move = find_move(name)
         enemy.hp -= calculate_damage(move, enemy)
+        enemy.hp = 0 if enemy.hp < 0
+        true
       else
         false
       end

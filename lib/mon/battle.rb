@@ -16,6 +16,14 @@ module Mon
       @home.attack(name, @visitor)
     end
 
+    def visitor_defeated?
+      @visitor.hp.zero?
+    end
+
+    def home_defeated?
+      @home.hp.zero?
+    end
+
     def started?
       @visitor && @home
     end
