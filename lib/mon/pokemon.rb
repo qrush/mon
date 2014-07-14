@@ -12,7 +12,7 @@ module Mon
     LEVEL   = 50
     STATS   = [HP, ATTACK, DEFENSE, SPATK, SPDEF, SPEED]
 
-    attr_accessor :id, :name, :hp, :stats
+    attr_accessor :id, :name, :hp, :stats, :last_move
 
     def initialize(id, name)
       @id = id
@@ -47,13 +47,23 @@ module Mon
     end
 
     def attack(name, enemy)
-      if move = find_move(name)
-        enemy.hp -= calculate_damage(move, enemy)
-        enemy.hp = 0 if enemy.hp < 0
-        true
-      else
-        false
-      end
+      self.last_move = find_move(name)
+      perform_damage(last_move, enemy)
+      self
+    end
+
+    def counterattack(enemy)
+      self.last_move = moves.shuffle.first
+      perform_damage(last_move, enemy)
+      self
+    end
+
+    def find_move(name)
+      @moves.find { |move| move[:identifier].upcase == name.upcase }
+    end
+
+    def speed
+      @stats[SPEED]
     end
 
     private
@@ -76,18 +86,22 @@ module Mon
         # TODO: STAB, Crits, Types
         modifier = rand(0.85..1)
 
+        # TODO: Figure out why some moves power are nil
+        power = move[:power] || 10
+
         (
           (
             ((2 * LEVEL + 10) / 250.0) *
             (@stats[attack_class] / enemy.stats[defense_class].to_f) *
-            move[:power] +
+            power +
             2
           ) * modifier
         ).floor
       end
 
-      def find_move(name)
-        @moves.find { |move| move[:identifier].upcase == name.upcase }
+      def perform_damage(move, enemy)
+        enemy.hp -= calculate_damage(move, enemy)
+        enemy.hp = 0 if enemy.hp < 0
       end
   end
 end

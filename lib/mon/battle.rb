@@ -12,16 +12,39 @@ module Mon
       @home = Pokedex.find_by_name(name)
     end
 
+    def can_use?(name)
+      @home.find_move(name)
+    end
+
     def use(name)
-      @home.attack(name, @visitor)
+      @name = name
+
+      # http://bulbapedia.bulbagarden.net/wiki/Stats#Speed
+      p moves = if @home.speed > @visitor.speed
+                [:attack, :counterattack]
+              elsif @visitor.speed > @home.speed
+                [:counterattack, :attack]
+              else
+                [:attack, :counterattack].shuffle
+              end
+
+      moves.map { |move| send(move) }
     end
 
-    def visitor_defeated?
-      @visitor.hp.zero?
+    def attack
+      @home.attack(@name, @visitor)
     end
 
-    def home_defeated?
-      @home.hp.zero?
+    def counterattack
+      @visitor.counterattack(@home)
+    end
+
+    def other(pokemon)
+      if pokemon == @home
+        @visitor
+      else
+        @home
+      end
     end
 
     def started?
