@@ -14,7 +14,7 @@ module Mon
     # http://bulbapedia.bulbagarden.net/wiki/Damage
     def damage(attacker, defender)
       if Pokedex.immune?(@type, defender.types)
-        0
+        @efficacy = 0
       else
         calculate(attacker, defender)
       end
