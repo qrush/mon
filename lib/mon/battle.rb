@@ -13,16 +13,16 @@ module Mon
     end
 
     def can_use?(name)
-      @home.find_move(name)
+      home.find_move(name)
     end
 
     def use(name)
       @name = name
 
       # http://bulbapedia.bulbagarden.net/wiki/Stats#Speed
-      p moves = if @home.speed > @visitor.speed
+      moves = if home.speed > visitor.speed
                 [:attack, :counterattack]
-              elsif @visitor.speed > @home.speed
+              elsif visitor.speed > home.speed
                 [:counterattack, :attack]
               else
                 [:attack, :counterattack].shuffle
@@ -32,23 +32,31 @@ module Mon
     end
 
     def attack
-      @home.attack(@name, @visitor)
+      home.attack(@name, visitor)
     end
 
     def counterattack
-      @visitor.counterattack(@home)
+      visitor.counterattack(home)
     end
 
     def other(pokemon)
-      if pokemon == @home
-        @visitor
+      if pokemon == home
+        visitor
       else
-        @home
+        home
       end
     end
 
     def started?
-      @visitor && @home
+      visitor && home
+    end
+
+    def battling?
+      visitor.hp.nonzero? && home.hp.nonzero?
+    end
+
+    def inspect
+      "#{home.name} @ #{home.hp} vs #{visitor.name} @ #{visitor.hp}"
     end
   end
 end

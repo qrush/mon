@@ -8,21 +8,28 @@ module Mon
 
     def self.find_by_id(id)
       row = name_scope.where(pokemon_species_id: id).first
-
-      Pokemon.new(id, row[:name])
+      build(id, row[:name])
     end
 
     def self.find_by_name(name)
       if name =~ /^\d+$/
         find_by_id(name)
       elsif row = name_scope.where(Sequel.ilike(:name, name)).first
-        Pokemon.new(row[:pokemon_species_id], row[:name])
+        build(row[:pokemon_species_id], row[:name])
       end
+    end
+
+    def self.build(id, name)
+      types = db[:pokemon_types].where(pokemon_id: id).map { |row| row[:type_id] }
+
+      Pokemon.new(id, name, types)
     end
 
     def self.moves_for(id)
       pokemon_move_ids = db[:pokemon_moves].where(pokemon_id: id).to_a.map { |pokemon_move| pokemon_move[:move_id] }
-      db[:moves].where(id: pokemon_move_ids, damage_class_id: DAMAGE_CLASS_ATTACK).order(Sequel.lit('RANDOM()')).limit(4).to_a
+      moves = db[:moves].where(id: pokemon_move_ids, damage_class_id: DAMAGE_CLASS_ATTACK).order(Sequel.lit('RANDOM()')).limit(4).to_a
+
+      moves.map { |row| Move.new(row) }
     end
 
     def self.stats_for(id)

@@ -1,7 +1,9 @@
-require "mon/version"
+require "mon/battle"
+require "mon/move"
 require "mon/pokedex"
 require "mon/pokemon"
-require "mon/battle"
+require "mon/stats"
+require "mon/version"
 
 module Mon
 end
