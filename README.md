@@ -18,7 +18,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Check out `Rakefile` for some example usage. This is probably awful and barely works.
 
 ## Contributing
 
