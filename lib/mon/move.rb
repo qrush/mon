@@ -20,6 +20,14 @@ module Mon
       end
     end
 
+    def super_effective?
+      @efficacy > 1
+    end
+
+    def not_effective?
+      @efficacy < 1
+    end
+
     private
 
       def calculate(attacker, defender)
@@ -28,14 +36,14 @@ module Mon
 
         # Type can be either 0, 0.25, 0.5, 1, 2, or 4 depending on the type of attack and the type of the defending Pokémon.
         # Multiple types are multiplied with each other.
-        type = Pokedex.move_efficacies(@type, defender.types).inject(1) do |total, efficacy|
-          total *= (efficacy / 100.0)
+        @efficacy = Pokedex.move_efficacies(@type, defender.types).inject(1) do |total, move_efficacy|
+          total *= (move_efficacy / 100.0)
         end
 
         # Critical is 2 for a critical hit in Generations I-V, 1/16 chance
         critical = rand(16) == 0 ? 2 : 1
 
-        modifier = stab * type * critical * rand(0.85..1)
+        modifier = stab * @efficacy * critical * rand(0.85..1)
 
         (
           (
