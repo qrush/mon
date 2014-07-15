@@ -36,6 +36,18 @@ module Mon
       db[:pokemon_stats].where(pokemon_id: id).to_a
     end
 
+    def self.immune?(damage_type_id, target_types)
+      type_scope(damage_type_id, target_types).where(damage_factor: 0).any?
+    end
+
+    def self.move_efficacies(damage_type_id, target_types)
+      type_scope(damage_type_id, target_types).map { |row| row[:damage_factor] }
+    end
+
+    def self.type_scope(damage_type_id, target_types)
+      db[:type_efficacy].where(damage_type_id: damage_type_id, target_type_id: target_types)
+    end
+
     def self.name_scope
       db[:pokemon_species_names].where(local_language_id: ENGLISH)
     end

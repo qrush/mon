@@ -28,13 +28,15 @@ task :battle do
   include Mon
 
   battle = Battle.new
-  battle.choose("Bulbasaur")
+  battle.choose("Charizard")
 
   while battle.battling?
     p battle
     move = battle.home.moves.shuffle.first
-    p move.name
-    battle.use move.name
+    moves = battle.use move.name
+    moves.each do |pokemon|
+      puts "> #{pokemon.name} used #{pokemon.last_move.name}"
+    end
   end
 
   p battle
