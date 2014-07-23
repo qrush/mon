@@ -55,7 +55,7 @@ task :battle do
     move = battle.home.moves.shuffle.first
     moves = battle.use move.name
     moves.each do |pokemon|
-      puts "> #{pokemon.name} used #{pokemon.last_move.name}"
+      puts "> #{pokemon.name} used #{pokemon.last_move.name} - CRIT: #{pokemon.last_move.critical? ? "YES" : "NO"}"
     end
   end
 

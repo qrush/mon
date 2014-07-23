@@ -1,5 +1,7 @@
 module Mon
   class Move
+    CRITICAL_MULTIPLIER = 2
+
     attr_reader :name
 
     def initialize(row)
@@ -28,6 +30,10 @@ module Mon
       @efficacy < 1
     end
 
+    def critical?
+      @critical == CRITICAL_MULTIPLIER
+    end
+
     private
 
       def calculate(attacker, defender)
@@ -41,9 +47,9 @@ module Mon
         end
 
         # Critical is 2 for a critical hit in Generations I-V, 1/16 chance
-        critical = rand(16) == 0 ? 2 : 1
+        @critical = rand(16) == 0 ? CRITICAL_MULTIPLIER : 1
 
-        modifier = stab * @efficacy * critical * rand(0.85..1)
+        modifier = stab * @efficacy * @critical * rand(0.85..1)
 
         (
           (
