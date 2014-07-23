@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Mon::VERSION
   spec.authors       = ["Nick Quaranto"]
   spec.email         = ["nick@quaran.to"]
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/qrush/mon"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
@@ -23,4 +23,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "sequel"
   spec.add_dependency "sqlite3"
+  spec.add_dependency "pg"
 end

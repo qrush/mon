@@ -54,6 +54,8 @@ module Mon
 
     def self.db
       require 'sequel'
+      Sequel.connect(ENV['DATABASE_URL'] || 'postgres://localhost/mon_development')
+
       @db ||= Sequel.sqlite(File.join(File.dirname(__FILE__), "../../share/pokedb.sqlite3"))
     end
   end

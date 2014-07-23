@@ -1,19 +1,39 @@
 require "bundler/gem_tasks"
 
-task :pokedb do
-  name = "pokedb.sqlite3"
-  File.unlink("share/#{name}")
-  Dir.chdir("share") do
-    %w(
+namespace :db do
+  NAME = "pokedb.sqlite3"
+
+  desc "Create postgres db"
+  task :create do
+    sh "createdb mon_development"
+  end
+
+  desc "Create postgres db"
+  task :drop do
+    sh "dropdb mon_development"
+  end
+
+  desc "Create sqlite db"
+  task :sqlite do
+    File.unlink("share/#{NAME}")
+    Dir.chdir("share") do
+      %w(
       moves
       pokemon_moves
       pokemon_species_names
       pokemon_stats
       pokemon_types
       type_efficacy
-    ).each do |table|
-      sh "./csv2sqlite.py #{table}.csv #{name} #{table}"
+      ).each do |table|
+        sh "./csv2sqlite.py #{table}.csv #{NAME} #{table}"
+      end
     end
+  end
+
+  desc "Import data from sqlite to postgres"
+  task :import do
+    sh "sqlite3 share/#{NAME} .dump > /tmp/#{NAME}.sql"
+    sh "psql -d mon_development -W < /tmp/#{NAME}.sql"
   end
 end
 
