@@ -22,6 +22,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
 
   spec.add_dependency "sequel"
-  spec.add_dependency "sqlite3"
   spec.add_dependency "pg"
+  spec.add_development_dependency "sqlite3"
 end
