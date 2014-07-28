@@ -6,37 +6,67 @@ module Mon
 
     def initialize
       @visitor = Pokedex.find_by_id(MONSTER_IDS.shuffle.first)
+      @ai_battle = true
     end
 
-    def choose(name)
+    def choose_visitor(name)
+      @ai_battle = false
+      @visitor = Pokedex.find_by_name(name)
+    end
+
+    def choose_home(name)
       @home = Pokedex.find_by_name(name)
     end
 
-    def can_use?(name)
+    def can_use_home?(name)
       home.find_move(name)
     end
 
-    def use(name)
-      @name = name
+    def can_use_visitor?(name)
+      visitor.find_move(name)
+    end
 
+    def use_home(name)
+      @home_name = name
+
+      if @ai_battle || @visitor_name
+        use_moves
+      end
+    end
+
+    def use_visitor(name)
+      @visitor_name = name
+
+      if @home_name
+        use_moves
+      end
+    end
+
+    def use_moves
       # http://bulbapedia.bulbagarden.net/wiki/Stats#Speed
-      moves = if home.speed > visitor.speed
-                [:attack, :counterattack]
+      order = if home.speed > visitor.speed
+                [:home_attack, :visitor_attack]
               elsif visitor.speed > home.speed
-                [:counterattack, :attack]
+                [:visitor_attack, :home_attack]
               else
-                [:attack, :counterattack].shuffle
+                [:home_attack, :visitor_attack].shuffle
               end
 
-      moves.map { |move| send(move) }
+      moves = order.map { |move| send(move) }
+      @home_name = @visitor_name = nil
+      moves
     end
 
-    def attack
-      home.attack(@name, visitor)
+    def home_attack
+      home.attack(@home_name, visitor)
     end
 
-    def counterattack
-      visitor.counterattack(home)
+    def visitor_attack
+      if @ai_battle
+        visitor.counterattack(home)
+      else
+        visitor.attack(@visitor_name, home)
+      end
     end
 
     def other(pokemon)

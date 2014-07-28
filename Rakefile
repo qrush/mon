@@ -48,12 +48,12 @@ task :battle do
   include Mon
 
   battle = Battle.new
-  battle.choose("Charizard")
+  battle.choose_home("Charizard")
 
   while battle.battling?
     p battle
     move = battle.home.moves.shuffle.first
-    moves = battle.use move.name
+    moves = battle.use_home move.name
     moves.each do |pokemon|
       puts "> #{pokemon.name} used #{pokemon.last_move.name} - CRIT: #{pokemon.last_move.critical? ? "YES" : "NO"}"
     end
