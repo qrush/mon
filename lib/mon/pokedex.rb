@@ -16,8 +16,7 @@ module Mon
 
     def self.find_by_name(name)
       if name =~ /^random$/i
-        r = Random.new
-        find_by_id(r.rand(MIN_POKEMON_ID...MAX_POKEMON_ID))
+        find_by_id(rand(MIN_POKEMON_ID...MAX_POKEMON_ID))
       elsif name =~ /^\d+$/
         find_by_id(name)
       elsif row = name_scope.where(Sequel.ilike(:name, name)).first
