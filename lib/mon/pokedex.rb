@@ -5,6 +5,9 @@ module Mon
     DAMAGE_CLASS_STATUS  = 1
     DAMAGE_CLASS_ATTACK  = 2
     DAMAGE_CLASS_SPECIAL = 3
+    
+    MIN_POKEMON_ID = 1    # We could query, but come on.
+    MAX_POKEMON_ID = 721  # Later, we can query the DB for max ID
 
     def self.find_by_id(id)
       row = name_scope.where(pokemon_species_id: id).first
@@ -12,7 +15,10 @@ module Mon
     end
 
     def self.find_by_name(name)
-      if name =~ /^\d+$/
+      if name =~ /^random$/i
+        r = Random.new
+        find_by_id(r.rand(MIN_POKEMON_ID...MAX_POKEMON_ID))
+      elsif name =~ /^\d+$/
         find_by_id(name)
       elsif row = name_scope.where(Sequel.ilike(:name, name)).first
         build(row[:pokemon_species_id], row[:name])
