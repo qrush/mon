@@ -32,7 +32,7 @@ module Mon
 
     def self.moves_for(id)
       pokemon_move_ids = db[:pokemon_moves].where(pokemon_id: id).to_a.map { |pokemon_move| pokemon_move[:move_id] }
-      moves = db[:moves].where(id: pokemon_move_ids, damage_class_id: DAMAGE_CLASS_ATTACK).order(Sequel.lit('RANDOM()')).limit(4).to_a
+      moves = db[:moves].where(id: pokemon_move_ids, damage_class_id: [DAMAGE_CLASS_ATTACK, DAMAGE_CLASS_SPECIAL]).order(Sequel.lit('RANDOM()')).limit(4).to_a
 
       moves.map { |row| Move.new(row) }
     end
